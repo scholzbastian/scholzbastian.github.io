@@ -417,23 +417,22 @@ h1{position:relative;z-index:1;max-width:940px;margin:12px 0 18px;font-size:clam
   Jahrgangs- und Spielcodes sind technisch getrennt und können unabhängig geändert werden.
 */
 const YEAR_HASHES = Object.freeze({
-  "1": "0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c",
-  "2": "edee29f882543b956620b26d0ee0e7e950399b1c4222f5de05e06425b4c995e9",
-  "3": "318aee3fed8c9d040d35a7fc1fa776fb31303833aa2de885354ddf3d44d8fb69"
+  "1": "b1093c1d15588e1f0c02115903bc200ed96512dd9fc118c924534119c4f1b9c9",
+  "2": "4a7c33139207c8c0e41e2f13b42cac2a0f9d1ae8da94c26efbbc63ddedfe64a0",
+  "3": "6f46087ab03ecc469b27fc05fa1b3009e1b2bbb3117db40b5d67dd4c1ce6b762"
 });
 
 /*
-  Solange noch keine separaten Spielcodes festgelegt wurden, nutzt jedes Spiel
-  zunächst denselben Hash wie sein Ausbildungsjahr. Die Einträge können später
-  unabhängig voneinander ersetzt werden.
+  Jedes Spiel besitzt einen eigenen Zugangscode, getrennt von den Jahrgangscodes.
+  In der HTML-Datei stehen ausschließlich die zugehörigen SHA-256-Hashes.
 */
 const GAME_CONFIG = Object.freeze({
   "aed13": {
-    hash: "0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c",
+    hash: "2c26d925d639ad124346af5e9830f66655be7234b6a877dc4a78a5a5ad52098d",
     url: "https://scholzbastian.github.io/AED13/"
   },
   "translation": {
-    hash: "318aee3fed8c9d040d35a7fc1fa776fb31303833aa2de885354ddf3d44d8fb69",
+    hash: "c38bfdfaa7917e507be36cd230d7ea0d4035229e3f88a084a17dce380a7f43ad",
     url: "https://scholzbastian.github.io/translation-rescue/"
   }
 });
@@ -463,7 +462,7 @@ async function unlockYear(year){
     const hash = await sha256(value);
 
     if(hash === YEAR_HASHES[year]){
-      sessionStorage.setItem("notsan_year_" + year, "open");
+      sessionStorage.setItem("notsan_access_v2_year_" + year, "open");
       applyYearOpen(year);
       input.value = "";
     }else{
@@ -505,7 +504,7 @@ async function unlockGame(gameId){
     const hash = await sha256(value);
 
     if(hash === config.hash){
-      sessionStorage.setItem("notsan_game_" + gameId, "open");
+      sessionStorage.setItem("notsan_access_v2_game_" + gameId, "open");
       applyGameOpen(gameId);
       input.value = "";
     }else{
@@ -530,7 +529,7 @@ function applyGameOpen(gameId){
 }
 
 ["1","2","3"].forEach(year => {
-  if(sessionStorage.getItem("notsan_year_" + year) === "open"){
+  if(sessionStorage.getItem("notsan_access_v2_year_" + year) === "open"){
     applyYearOpen(year);
   }
 
@@ -540,7 +539,7 @@ function applyGameOpen(gameId){
 });
 
 Object.keys(GAME_CONFIG).forEach(gameId => {
-  if(sessionStorage.getItem("notsan_game_" + gameId) === "open"){
+  if(sessionStorage.getItem("notsan_access_v2_game_" + gameId) === "open"){
     applyGameOpen(gameId);
   }
 
